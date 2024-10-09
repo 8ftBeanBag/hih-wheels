@@ -6,5 +6,14 @@ export const anxietyWheel = [
     "more stuff",
     "test",
     "more",
+    "this",
+    "this",
+    "this",
+    "this",
+    "this",
+    "this",
+    "this",
+    "this",
+    "this",
     "this"
 ]

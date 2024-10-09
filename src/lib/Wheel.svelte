@@ -7,16 +7,16 @@
   const spokeDegrees = 180 / items.length;
 
   let wheelNode: HTMLButtonElement | null = null;
+  const min = 360;
+  const limit = 3600;
+  let spinDegrees = min;
 
   const toggleSpinning = () => {
+    let max = Math.floor(Math.random() * limit);
+    spinDegrees = Math.random() * (max - min) + min;
+    console.log(spinDegrees);
     if (wheelNode) {
-      wheelNode.classList.add("spinning");
-      setTimeout(() => {
-        if (wheelNode) {
-          wheelNode.style.transform = "rotate(180deg)";
-          wheelNode.classList.remove("spinning");
-        }
-      }, 1000);
+      wheelNode.style.transform = `rotate(${spinDegrees}deg)`;
     }
   };
 </script>
@@ -27,15 +27,12 @@
   on:click={() => toggleSpinning()}
 >
   {#each items as wheelItem, idx}
-    <div class="wheel-item" style="transform: rotate({itemDegrees * idx}deg);">
-      <div
-        class="wheel-text"
-        style={itemDegrees * idx > 90 && itemDegrees * idx < 270
-          ? "transform: rotate(180deg); justify-content: end;"
-          : ""}
-      >
-        {wheelItem}
-      </div>
+    <div
+      class="wheel-item"
+      style="transform: rotate(
+      {itemDegrees * idx}deg); --spin-degrees: {spinDegrees}deg;"
+    >
+      {wheelItem}
     </div>
     <div
       class="spoke"
@@ -46,45 +43,29 @@
 
 <style>
   .wheel-container {
-    width: 400px;
-    height: 400px;
+    width: calc(2 * var(--wheel-width));
+    height: calc(2 * var(--wheel-width));
     margin: auto;
-    outline: 4px solid black;
+    outline: var(--wheel-border-w) solid black;
     background-color: purple;
     border-radius: 99999px;
     display: block;
+    padding: 0;
     border: none;
-    position: relative;
+    transition: transform 2s;
   }
   .wheel-item {
     position: absolute;
-    /* top: calc(200px - 12px); */
-    width: calc(200px - 12px);
+    width: var(--wheel-width);
     color: white;
     transform-origin: 100% 50%;
-    /* padding-left: 12px; */
   }
   .spoke {
     position: absolute;
-    /* top: 198px; */
     background-color: white;
-    width: calc(200px - 12px);
+    width: var(--wheel-width);
     color: white;
     transform-origin: 100% 50%;
-    height: 4px;
-  }
-  .wheel-text {
-    display: flex;
-  }
-  :global(.wheel-container.spinning) {
-    animation: spinning 4s ease-in forwards;
-  }
-  @keyframes spinning {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(180deg);
-    }
+    height: 1px;
   }
 </style>

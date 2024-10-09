@@ -1,2 +1,8 @@
 :root {
+    --wheel-width: 200px;
+    --wheel-border-w: 4px;
 }
+
+/* * {
+    border: 1px solid red;
+} */
