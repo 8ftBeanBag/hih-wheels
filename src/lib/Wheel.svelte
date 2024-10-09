@@ -1,29 +1,48 @@
-<script>
+<script lang="ts">
   import { anxietyWheel } from "../constants/wheels";
 
   let items = anxietyWheel;
 
   const itemDegrees = 360 / items.length;
   const spokeDegrees = 180 / items.length;
-  console.log(items.length, 360 / items.length);
+
+  let wheelNode: HTMLButtonElement | null = null;
+
+  const toggleSpinning = () => {
+    if (wheelNode) {
+      wheelNode.classList.add("spinning");
+      setTimeout(() => {
+        if (wheelNode) {
+          wheelNode.style.transform = "rotate(180deg)";
+          wheelNode.classList.remove("spinning");
+        }
+      }, 1000);
+    }
+  };
 </script>
 
-<div class="wheel-container">
-  <div class="wheel-items-parent">
-    {#each items as wheelItem, idx}
+<button
+  class="wheel-container"
+  bind:this={wheelNode}
+  on:click={() => toggleSpinning()}
+>
+  {#each items as wheelItem, idx}
+    <div class="wheel-item" style="transform: rotate({itemDegrees * idx}deg);">
       <div
-        class="wheel-item"
-        style="transform: rotate({itemDegrees * idx}deg);"
+        class="wheel-text"
+        style={itemDegrees * idx > 90 && itemDegrees * idx < 270
+          ? "transform: rotate(180deg); justify-content: end;"
+          : ""}
       >
         {wheelItem}
       </div>
-      <div
-        class="spoke"
-        style="transform: rotate({itemDegrees * idx + spokeDegrees}deg)"
-      />
-    {/each}
-  </div>
-</div>
+    </div>
+    <div
+      class="spoke"
+      style="transform: rotate({itemDegrees * idx + spokeDegrees}deg)"
+    />
+  {/each}
+</button>
 
 <style>
   .wheel-container {
@@ -33,26 +52,39 @@
     outline: 4px solid black;
     background-color: purple;
     border-radius: 99999px;
-  }
-  .wheel-items-parent {
+    display: block;
+    border: none;
     position: relative;
   }
   .wheel-item {
     position: absolute;
-    top: calc(200px - 12px);
+    /* top: calc(200px - 12px); */
     width: calc(200px - 12px);
     color: white;
     transform-origin: 100% 50%;
-    padding-left: 12px;
-    border: 1px solid black;
+    /* padding-left: 12px; */
   }
   .spoke {
     position: absolute;
-    top: 198px;
+    /* top: 198px; */
     background-color: white;
-    width: 200px;
+    width: calc(200px - 12px);
     color: white;
     transform-origin: 100% 50%;
     height: 4px;
+  }
+  .wheel-text {
+    display: flex;
+  }
+  :global(.wheel-container.spinning) {
+    animation: spinning 4s ease-in forwards;
+  }
+  @keyframes spinning {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(180deg);
+    }
   }
 </style>
